@@ -21,6 +21,7 @@ public class JFrameView extends javax.swing.JFrame {
         initComponents();
         agregarCabecera();
     }
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,7 +33,7 @@ public class JFrameView extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        jcombo = new javax.swing.JComboBox<>();
+        jCombo = new javax.swing.JComboBox<>();
         jbAgregar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Tabla = new javax.swing.JTable();
@@ -45,7 +46,12 @@ public class JFrameView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electrónica", "Ropa", "Alimentos", " " }));
+        jCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electrónica", "Ropa", "Alimentos", " " }));
+        jCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboActionPerformed(evt);
+            }
+        });
 
         jbAgregar.setText("Agregar Producto");
         jbAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -84,7 +90,7 @@ public class JFrameView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(150, 150, 150)
-                        .addComponent(jcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(56, 56, 56)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -102,7 +108,7 @@ public class JFrameView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(jcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -123,17 +129,25 @@ public class JFrameView extends javax.swing.JFrame {
 
     private void jbAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAgregarActionPerformed
         // TODO add your handling code here:
-        try{
+      try{
+            if(jtnombre.getText().isEmpty() || jtprecio.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Error: Campos Vacios");
+            return;
+        }
         String nombre=jtnombre.getText();
         int precio=Integer.parseInt(jtprecio.getText());
-        Producto produc = new Producto(nombre,precio);
+        String categoria=(String) jCombo.getSelectedItem();
+        Producto produc = new Producto(nombre,precio,categoria);
         agregarDatos(produc);
         }catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(this, "Error");
+            JOptionPane.showMessageDialog(this, "Error: Datos invalidos");
         }
-        
-        
+       
     }//GEN-LAST:event_jbAgregarActionPerformed
+
+    private void jComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboActionPerformed
+      
+    }//GEN-LAST:event_jComboActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,24 +186,29 @@ public class JFrameView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Tabla;
+    private javax.swing.JComboBox<String> jCombo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbAgregar;
-    private javax.swing.JComboBox<String> jcombo;
     private javax.swing.JTextField jtnombre;
     private javax.swing.JTextField jtprecio;
     // End of variables declaration//GEN-END:variables
 
 private void agregarCabecera(){
+
+
 modelo.addColumn("Nombre");
 modelo.addColumn("Precio");
+modelo.addColumn("Categoria");
 Tabla.setModel(modelo);
 }
 
 private void agregarDatos(Producto producto){
-    modelo.addRow(new Object[]{producto.getNombre(),producto.getPrecio()});
+     
+    modelo.addRow(new Object[]{producto.getNombre(),producto.getPrecio(),producto.getCategoria()});
 }
+
 
 }
